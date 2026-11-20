@@ -1,0 +1,314 @@
+[
+ {
+  "code": "7160600",
+  "name": "Albacete - Los Llanos",
+  "short_code": "ALB",
+  "synonyms": [
+   "Albacete"
+  ],
+  "connected": [
+   "7117000",
+   "7110600",
+   "7108004",
+   "7160911",
+   "7103410",
+   "7161200",
+   "MT1",
+   "7103208"
+  ],
+  "hidden": false
+ },
+ {
+  "code": "7160911",
+  "name": "Alicante - Terminal",
+  "short_code": "ALI",
+  "synonyms": [
+   "Alicante"
+  ],
+  "connected": [
+   "7117000",
+   "7110600",
+   "7108004",
+   "7160600",
+   "7103410",
+   "7161200",
+   "MT1",
+   "7103208"
+  ],
+  "hidden": false
+ },
+ {
+  "code": "7171801",
+  "name": "Barcelona - Sants",
+  "short_code": "BAR",
+  "synonyms": [
+   "Barcelona"
+  ],
+  "connected": [
+   "7150500",
+   "7154413",
+   "MT1",
+   "7151003",
+   "7104040",
+   "7160000"
+  ],
+  "hidden": false
+ },
+ {
+  "code": "7150500",
+  "name": "Córdoba - Julio Anguita",
+  "short_code": "COR",
+  "synonyms": [
+   "Córdoba"
+  ],
+  "connected": [
+   "7171801",
+   "7154413",
+   "MT1",
+   "7151003",
+   "7104040",
+   "7160000"
+  ],
+  "hidden": false
+ },
+ {
+  "code": "7103208",
+  "name": "Cuenca - Fernando Zóbel",
+  "short_code": "CUE",
+  "synonyms": [
+   "Cuenca"
+  ],
+  "connected": [
+   "7117000",
+   "7110600",
+   "7108004",
+   "7160600",
+   "7160911",
+   "7103216",
+   "MT1"
+  ],
+  "hidden": false
+ },
+ {
+  "code": "7103410",
+  "name": "Elche - ELX AV",
+  "short_code": "ELX",
+  "synonyms": [
+   "Elche"
+  ],
+  "connected": [
+   "7117000",
+   "7110600",
+   "7108004",
+   "7160600",
+   "7160911",
+   "7161200",
+   "MT1",
+   "7103208"
+  ],
+  "hidden": false
+ },
+ {
+  "code": "MT1",
+  "name": "Madrid - Todas las estaciones",
+  "short_code": "MT1",
+  "synonyms": [
+   "Madrid"
+  ],
+  "connected": [
+   "7110600",
+   "7108004",
+   "7160600",
+   "7160911",
+   "7103410",
+   "7104104",
+   "7103216",
+   "7154413",
+   "7151003",
+   "7103208",
+   "7150500",
+   "7171801",
+   "7161200",
+   "7104040"
+  ],
+  "hidden": false
+ },
+ {
+  "code": "7160000",
+  "name": "Madrid - Puerta de Atocha - Almudena Grandes",
+  "short_code": "MAT",
+  "synonyms": [
+   "Madrid"
+  ],
+  "connected": [
+   "7150500",
+   "7171801",
+   "7104104",
+   "7154413",
+   "7151003",
+   "7104040"
+  ],
+  "hidden": true
+ },
+ {
+  "code": "7117000",
+  "name": "Madrid - Chamartín - Clara Campoamor",
+  "short_code": "MCH",
+  "synonyms": [
+   "Madrid"
+  ],
+  "connected": [
+   "7110600",
+   "7108004",
+   "7160600",
+   "7160911",
+   "7103410",
+   "7161200",
+   "7103216",
+   "7103208"
+  ],
+  "hidden": true
+ },
+ {
+  "code": "7154413",
+  "name": "Málaga - María Zambrano",
+  "short_code": "MAL",
+  "synonyms": [
+   "Málaga"
+  ],
+  "connected": [
+   "7150500",
+   "7171801",
+   "MT1",
+   "7104040",
+   "7160000"
+  ],
+  "hidden": false
+ },
+ {
+  "code": "7161200",
+  "name": "Murcia - Murcia Del Carmen",
+  "short_code": "MUR",
+  "synonyms": [
+   "Murcia"
+  ],
+  "connected": [
+   "7117000",
+   "7110600",
+   "7108004",
+   "7160600",
+   "7160911",
+   "7103410",
+   "MT1",
+   "7103208"
+  ],
+  "hidden": false
+ },
+ {
+  "code": "7108004",
+  "name": "Segovia - Guiomar",
+  "short_code": "SGV",
+  "synonyms": [
+   "Segovia"
+  ],
+  "connected": [
+   "7117000",
+   "7110600",
+   "7160600",
+   "7160911",
+   "7103410",
+   "7161200",
+   "7103216",
+   "MT1",
+   "7103208"
+  ],
+  "hidden": false
+ },
+ {
+  "code": "7151003",
+  "name": "Sevilla - Santa Justa",
+  "short_code": "SEV",
+  "synonyms": [
+   "Sevilla"
+  ],
+  "connected": [
+   "7150500",
+   "7171801",
+   "MT1",
+   "7104040",
+   "7160000"
+  ],
+  "hidden": false
+ },
+ {
+  "code": "7104104",
+  "name": "Tarragona - Camp de Tarragona",
+  "short_code": "TAR",
+  "synonyms": [
+   "Tarragona"
+  ],
+  "connected": [
+   "7150500",
+   "7154413",
+   "MT1",
+   "7151003",
+   "7104040",
+   "7160000"
+  ],
+  "hidden": false
+ },
+ {
+  "code": "7103216",
+  "name": "Valencia - Joaquín Sorolla",
+  "short_code": "VAL",
+  "synonyms": [
+   "Valencia"
+  ],
+  "connected": [
+   "7117000",
+   "7110600",
+   "7108004",
+   "MT1",
+   "7103208"
+  ],
+  "hidden": false
+ },
+ {
+  "code": "7110600",
+  "name": "Valladolid - Campo Grande",
+  "short_code": "VLD",
+  "synonyms": [
+   "Valladolid"
+  ],
+  "connected": [
+   "7117000",
+   "7108004",
+   "7160600",
+   "7160911",
+   "7103410",
+   "7161200",
+   "7103216",
+   "MT1",
+   "7103208"
+  ],
+  "hidden": false
+ },
+ {
+  "code": "7104040",
+  "name": "Zaragoza - Delicias",
+  "short_code": "ZAR",
+  "synonyms": [
+   "Zaragoza"
+  ],
+  "connected": [
+   "7150500",
+   "7171801",
+   "7104104",
+   "7154413",
+   "MT1",
+   "7151003",
+   "7160000"
+  ],
+  "hidden": false
+ }
+]
