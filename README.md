@@ -64,6 +64,12 @@ Both tools print the same layout, so merging them is one `jq` line (with [renfe-
 
 ## Use it from an AI agent (MCP)
 
+Ask in plain words; the assistant picks the tools. This is a real run, lightly shortened ([full transcript](docs/mcp_transcript.md)):
+
+<p align="center">
+  <img src="docs/mcp-demo.svg" alt="An AI assistant asked for the cheapest Ouigo day from Madrid to Valencia in December calls cheapest_days, then search_trains, and answers: 9 euros on 1, 2, 15 and 16 December, with the four trains on 1 December and a link to book on Ouigo's page" width="860">
+</p>
+
 ```json
 {
   "mcpServers": {
@@ -116,7 +122,8 @@ Errors go to stderr as `{"error": {"code": …}}`, with renfe-cli's exit codes:
 uv sync
 uv run pytest            # offline tests on recorded responses
 uv run pytest -m live    # one real search
-python3 docs/make_demo.py  # rebuilds docs/demo.svg
+python3 docs/make_demo.py       # rebuilds docs/demo.svg (terminal)
+python3 docs/make_chat_demo.py  # rebuilds docs/mcp-demo.svg (AI chat)
 ```
 
 ## Credit and licence
