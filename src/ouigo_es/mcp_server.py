@@ -14,7 +14,7 @@ def _safe(fn, *a):
     except OuigoError as e:
         return e.payload()
     except ValueError as e:
-        return {"error": "bad_input", "detail": str(e)}
+        return {"error": {"code": "bad_input", "detail": str(e)}}
 
 
 # core uses Playwright's sync API, which refuses to run inside the MCP server's
@@ -23,6 +23,12 @@ def _safe(fn, *a):
 async def search_trains(origin: str, destination: str, date: str) -> dict:
     """Ouigo trains and prices for one day (YYYY-MM-DD), cheapest first. Slow (~5-10 s)."""
     return await asyncio.to_thread(_safe, core.search, origin, destination, date)
+
+
+@mcp.tool()
+def shop_link(origin: str, destination: str, date: str) -> dict:
+    """Ouigo's own search page for this trip (route and date filled in). The traveller picks and pays there."""
+    return _safe(core.open_link, origin, destination, date)
 
 
 @mcp.tool()

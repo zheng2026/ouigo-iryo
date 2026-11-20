@@ -108,44 +108,61 @@ def _month_matcher(month_first: _date):
 
 # ---- parsers (pure, tested on recorded fixtures) ----
 
-def _hm(ts: str) -> str:
-    return ts[11:16]
-
-
 def parse_search(body, date: str) -> list[dict]:
+    """One dict per train, in the same layout as luisgonzaleznf/renfe-cli's `search` (aligned
+    2026-11-20): full local timestamps, duration_minutes, fares cheapest first. Ouigo extras
+    (origin_station, destination_station, fare family) ride along as extra keys."""
     data = json.loads(body) if isinstance(body, (str, bytes)) else body
     trains = []
-    for j in data.get("outbound") or []:
-        segs = j.get("segments") or []
-        if not segs:
-            continue
-        dep = j["departure_station"]["departure_timestamp"]
-        arr = j["arrival_station"]["arrival_timestamp"]
-        dur = int((datetime.fromisoformat(arr) - datetime.fromisoformat(dep)).total_seconds() // 60)
-        fares = sorted(
-            ({"name": p["name"], "family": p["product_family_id"], "price": p["price"]} for p in j.get("packages") or []),
-            key=lambda f: f["price"],
-        )
-        trains.append({
-            "service": "+".join(s["service_name"] for s in segs),
-            "departure": _hm(dep),
-            "arrival": _hm(arr),
-            "duration_min": dur,
-            "origin_station": j["departure_station"]["name"],
-            "destination_station": j["arrival_station"]["name"],
-            "price": j["price"],
-            "currency": "EUR",
-            "fares": fares,
-            "sold_out": bool(j.get("full")),
-        })
-    trains.sort(key=lambda t: (t["price"] is None, t["price"], t["departure"]))
+    try:
+        for j in data.get("outbound") or []:
+            segs = j.get("segments") or []
+            if not segs:
+                continue
+            dep = j["departure_station"]["departure_timestamp"]
+            arr = j["arrival_station"]["arrival_timestamp"]
+            dur = int((datetime.fromisoformat(arr) - datetime.fromisoformat(dep)).total_seconds() // 60)
+            fares = sorted(
+                ({"name": p["name"], "price": p["price"], "currency": "EUR", "family": p["product_family_id"]}
+                 for p in j.get("packages") or [] if p.get("price") is not None),
+                key=lambda f: f["price"],
+            )
+            trains.append({
+                "service": "+".join(s["service_name"] for s in segs),
+                "type": "OUIGO",
+                "type_code": None,
+                "departure": dep,
+                "arrival": arr,
+                "duration_minutes": dur,
+                "changes": len(segs) - 1,
+                "available": not j.get("full") and bool(fares),
+                "fares": fares,
+                "intermediate_stops": None,
+                "delay_minutes": None,
+                "live_train": None,
+                "origin_station": j["departure_station"]["name"],
+                "destination_station": j["arrival_station"]["name"],
+            })
+    except (KeyError, TypeError, ValueError) as e:
+        raise OuigoError("api_changed", detail=f"unexpected search response: {type(e).__name__}: {e}")
+    trains.sort(key=lambda t: t["departure"])
     return trains
+
+
+def shop_link(o: dict, d: dict, date: str) -> dict:
+    """Ouigo's public search page for this trip, like renfe-cli's `shop` block. You pick and pay there."""
+    return {"url": DEEPLINK.format(o=quote(o["code"]), d=quote(d["code"]), date=date),
+            "prefilled": ["origin", "destination", "date", "one_way", "adults"],
+            "next": "Pick your train and fare on Ouigo's page, then pay there."}
 
 
 def parse_calendar(body) -> list[dict]:
     data = json.loads(body) if isinstance(body, (str, bytes)) else body
-    return [{"date": d["date"], "price": d.get("price"), "is_promo": bool(d.get("is_promo")),
-             "is_best_price": bool(d.get("is_best_price"))} for d in data]
+    try:
+        return [{"date": d["date"], "price": d.get("price"), "is_promo": bool(d.get("is_promo")),
+                 "is_best_price": bool(d.get("is_best_price"))} for d in data]
+    except (KeyError, TypeError) as e:
+        raise OuigoError("api_changed", detail=f"unexpected calendar response: {type(e).__name__}: {e}")
 
 
 def _now():
@@ -153,24 +170,41 @@ def _now():
 
 
 def _st(s):
-    return {"code": s["code"], "name": s["name"]}
+    # "group" = a city-wide entry like MT1 "Madrid - Todas las estaciones", as renfe-cli marks "Madrid (Todas)".
+    return {"code": s["code"], "name": s["name"], "group": "todas las estaciones" in s["name"].lower()}
+
+
+def _check_date(date: str):
+    try:
+        _date.fromisoformat(date)
+    except ValueError:
+        raise OuigoError("bad_dates", detail=f"not a YYYY-MM-DD date: {date!r}")
 
 
 # ---- public API ----
 
+def open_link(origin: str, destination: str, date: str) -> dict:
+    o, d = resolve(origin), resolve(destination)
+    _check_date(date)
+    return {"source": "ouigo", "date": date, "origin": _st(o), "destination": _st(d),
+            "shop": shop_link(o, d, date)}
+
+
 def search(origin: str, destination: str, date: str, debug: bool = False) -> dict:
     o, d = resolve(origin), resolve(destination)
-    _date.fromisoformat(date)
+    _check_date(date)
     body = _capture(DEEPLINK.format(o=quote(o["code"]), d=quote(d["code"]), date=date), _is_search, debug)
     trains = parse_search(body, date)
-    if not trains:
-        raise OuigoError("no_trains", date=date)
     return {"source": "ouigo", "date": date, "origin": _st(o), "destination": _st(d),
-            "passengers": {"adults": 1}, "count": len(trains), "trains": trains, "fetched_at": _now()}
+            "passengers": {"adults": 1}, "fares_included": True,
+            "notice": None if trains else "No Ouigo trains on this date.",
+            "count": len(trains), "trains": trains, "shop": shop_link(o, d, date),
+            "delays_included": False, "retries": [], "fetched_at": _now()}
 
 
 def calendar(origin: str, destination: str, start: str, end: str, debug: bool = False) -> dict:
     o, d = resolve(origin), resolve(destination)
+    _check_date(start); _check_date(end)
     s, e = _date.fromisoformat(start), _date.fromisoformat(end)
     if e < s:
         raise OuigoError("bad_dates", detail="end is before start")
@@ -184,9 +218,10 @@ def calendar(origin: str, destination: str, start: str, end: str, debug: bool = 
         m = _date(m.year + (m.month == 12), m.month % 12 + 1, 1)
     priced = [x for x in days if x["price"] is not None]
     cheapest = min(priced, key=lambda x: (x["price"], x["date"])) if priced else None
-    return {"source": "ouigo", "origin": _st(o), "destination": _st(d), "days": days,
+    return {"source": "ouigo", "origin": _st(o), "destination": _st(d), "passengers": {"adults": 1},
+            "currency": "EUR", "days": days,
             "cheapest": {"date": cheapest["date"], "price": cheapest["price"]} if cheapest else None,
-            "fetched_at": _now()}
+            "notice": None if priced else "No Ouigo prices in this range.", "fetched_at": _now()}
 
 
 def refresh_stations(debug: bool = False) -> list[dict]:
