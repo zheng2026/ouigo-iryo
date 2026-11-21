@@ -15,6 +15,7 @@ dependencies = [
 
 [project.scripts]
 ouigo = "ouigo_es.cli:main"
+iryo = "ouigo_es.iryo_cli:main"
 ouigo-mcp = "ouigo_es.mcp_server:main"
 
 [build-system]

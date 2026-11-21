@@ -148,7 +148,7 @@ def test_mcp_tools_registered():
     import asyncio
     from ouigo_es.mcp_server import mcp
     names = {t.name for t in asyncio.run(mcp.list_tools())}
-    assert names == {"search_trains", "cheapest_days", "find_station", "shop_link"}
+    assert names == {"search_trains", "cheapest_days", "find_station", "shop_link", "iryo_link"}
 
 
 @pytest.mark.live

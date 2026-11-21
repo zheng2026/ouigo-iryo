@@ -1,6 +1,6 @@
 # ouigo-es
 
-**Ouigo España fares in your terminal and in your AI agent.** Trains, all three fare levels and the cheapest day of the month, as JSON. Unofficial, not affiliated with Ouigo.
+**Ouigo España fares in your terminal and in your AI agent.** Trains, all three fare levels and the cheapest day of the month, as JSON. Plus a ready-made Iryo booking link. Unofficial, not affiliated with Ouigo or Iryo.
 
 <p align="center">
   <img src="docs/demo.svg" alt="ouigo CLI demo: the cheapest December day from Madrid to Valencia, the three cheapest trains on one day, and Ouigo's own booking page opened with the date filled in" width="860">
@@ -21,6 +21,7 @@ Renfe already has a great open CLI ([luisgonzaleznf/renfe-cli](https://github.co
 - **`calendar`**: the cheapest price for each day in a date range. Find the €9 day before you pick the train.
 - **`open`**: Ouigo's own booking page with route **and date** filled in. You choose and pay there; this tool never touches payment.
 - **`stations`**: Ouigo's stations, matched by name (accents and case ignored) with typo suggestions.
+- **`iryo`**: a ready-made link to Iryo's own booking page for your route and date. No fares (see below).
 - **MCP server**: the same four abilities for Claude Desktop, Claude Code or any MCP client.
 
 ## Install
@@ -78,7 +79,17 @@ Ask in plain words; the assistant picks the tools. This is a real run, lightly s
 }
 ```
 
-Tools: `search_trains(origin, destination, date)`, `cheapest_days(origin, destination, start, end)`, `find_station(query)`, `shop_link(origin, destination, date)`.
+Tools: `search_trains(origin, destination, date)`, `cheapest_days(origin, destination, start, end)`, `find_station(query)`, `shop_link(origin, destination, date)`, `iryo_link(origin, destination, date)` (link only, no fares).
+
+## Iryo: a ready link, no fares
+
+```sh
+iryo open Madrid Valencia -d 2026-12-15          # opens Iryo's page in your browser
+iryo open Madrid Valencia -d 2026-12-15 --print  # just print the link (--json for details)
+iryo stations sevilla
+```
+
+Iryo blocks automated access, so this tool never contacts Iryo: it only builds the link, and you open it and see the trains and fares there. "Madrid" means all Madrid stations. Iryo's València trains use Chamartín, not Atocha; if you pick a pair Iryo is known not to run, you get a warning (the page would say "No hay datos de billetes").
 
 ## How it works, and what it never does
 
@@ -114,7 +125,7 @@ Errors go to stderr as `{"error": {"code": …}}`, with renfe-cli's exit codes:
 
 ## En español
 
-`ouigo-es` consulta los precios de Ouigo España desde la terminal o desde un agente de IA (MCP): trenes, las tres tarifas y el día más barato del mes, en JSON. Usa tu propio Chrome para abrir la página pública de búsqueda de Ouigo y leer lo que esa página recibe, sin iniciar sesión, sin credenciales y sin saltarse ninguna protección. Habla el mismo JSON que [renfe-cli](https://github.com/luisgonzaleznf/renfe-cli), así que puedes comparar Renfe, Avlo y Ouigo en una sola lista. No oficial; no afiliado a Ouigo.
+`ouigo-es` consulta los precios de Ouigo España desde la terminal o desde un agente de IA (MCP): trenes, las tres tarifas y el día más barato del mes, en JSON. Usa tu propio Chrome para abrir la página pública de búsqueda de Ouigo y leer lo que esa página recibe, sin iniciar sesión, sin credenciales y sin saltarse ninguna protección. Habla el mismo JSON que [renfe-cli](https://github.com/luisgonzaleznf/renfe-cli), así que puedes comparar Renfe, Avlo y Ouigo en una sola lista. No oficial; no afiliado a Ouigo ni a Iryo. Para Iryo solo construye el enlace a su página de reservas (`iryo open Madrid Valencia -d 2026-12-15`), sin precios: Iryo bloquea el acceso automático.
 
 ## Development
 

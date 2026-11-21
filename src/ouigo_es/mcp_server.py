@@ -2,7 +2,7 @@ import asyncio
 
 from mcp.server.fastmcp import FastMCP
 
-from . import core, stations
+from . import core, iryo, stations
 from .errors import OuigoError
 
 mcp = FastMCP("ouigo-es")
@@ -29,6 +29,14 @@ async def search_trains(origin: str, destination: str, date: str) -> dict:
 def shop_link(origin: str, destination: str, date: str) -> dict:
     """Ouigo's own search page for this trip (route and date filled in). The traveller picks and pays there."""
     return _safe(core.open_link, origin, destination, date)
+
+
+@mcp.tool()
+def iryo_link(origin: str, destination: str, date: str) -> dict:
+    """Iryo's own booking page for this trip (YYYY-MM-DD), as a link. Iryo gives no fares through this tool:
+    hand the link to the user, who opens it and picks and pays there. Does not open a browser.
+    "Madrid" means all Madrid stations; a `warning` field flags pairs Iryo is known not to run."""
+    return _safe(iryo.iryo_link, origin, destination, date)
 
 
 @mcp.tool()
