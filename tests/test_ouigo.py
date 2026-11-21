@@ -170,6 +170,7 @@ def test_calendar_iryo_uses_cheapest_day(monkeypatch):
     monkeypatch.setattr(core, "_capture", lambda *a, **k: fx("calendar_month.json"))
     r = core.calendar("Madrid", "Valencia", "2026-12-05", "2026-12-20")
     assert r["iryo"]["date"] == r["cheapest"]["date"]
+    assert f'outboundDate={r["cheapest"]["date"]}' in r["shop"]["url"]
     assert f'%22departure%22:%22{r["cheapest"]["date"]}%22' in r["iryo"]["url"]
 
 

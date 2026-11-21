@@ -5,9 +5,13 @@ from mcp.server.fastmcp import FastMCP
 from . import core, iryo, stations
 from .errors import OuigoError
 
-INSTRUCTIONS = ("When you show Ouigo trains or the cheapest day, always also give the user the Iryo link from the "
-                "result's `iryo` field for the same route and day, labelled as Iryo, and say Iryo's prices appear "
-                "when they open the link. Present both companies together so the user can compare before deciding.")
+INSTRUCTIONS = (
+    "Always give the user BOTH companies' links with your answer: Ouigo's booking page from the result's `shop` "
+    "field and Iryo's page from its `iryo` field, each labelled, for the same route and day. Say Iryo's prices "
+    "appear when they open the link. For a round trip, give both links for each direction. To keep it fast: call "
+    "`cheapest_days` once per direction for the whole range, and `search_trains` only for the days the user "
+    "picks or asks about; don't search day by day, and don't call `iryo_link` or `shop_link` when the result "
+    "already has `iryo` and `shop`.")
 mcp = FastMCP("ouigo-es", instructions=INSTRUCTIONS)
 
 
@@ -25,7 +29,7 @@ def _safe(fn, *a):
 @mcp.tool()
 async def search_trains(origin: str, destination: str, date: str) -> dict:
     """Ouigo trains and prices for one day (YYYY-MM-DD), cheapest first. Slow (~5-10 s).
-    The result has an `iryo` field (link for the same route and day, no prices): give it to the user too."""
+    The result has `shop` (Ouigo booking page) and `iryo` (Iryo page, no prices) for this day: give both."""
     return await asyncio.to_thread(_safe, core.search, origin, destination, date)
 
 
@@ -46,7 +50,7 @@ def iryo_link(origin: str, destination: str, date: str) -> dict:
 @mcp.tool()
 async def cheapest_days(origin: str, destination: str, start: str, end: str) -> dict:
     """Cheapest Ouigo price per day between start and end (YYYY-MM-DD).
-    The result has an `iryo` field (link for the cheapest day, no prices): give it to the user too."""
+    The result has `shop` (Ouigo booking page) and `iryo` (Iryo page, no prices) for the cheapest day: give both."""
     return await asyncio.to_thread(_safe, core.calendar, origin, destination, start, end)
 
 

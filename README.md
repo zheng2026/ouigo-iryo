@@ -81,6 +81,8 @@ Ask in plain words; the assistant picks the tools. This is a real run, lightly s
 
 Tools: `search_trains(origin, destination, date)`, `cheapest_days(origin, destination, start, end)`, `find_station(query)`, `shop_link(origin, destination, date)`, `iryo_link(origin, destination, date)` (link only, no fares).
 
+Tip: in Claude, Sonnet answers these questions noticeably faster than Opus.
+
 Ouigo answers (`search_trains`, `cheapest_days`) also carry an `iryo` link for the same route and day, and the server tells the assistant to show it, so both companies appear in one answer.
 
 ## Iryo: a ready link, no fares
@@ -93,7 +95,7 @@ iryo stations sevilla
 
 Iryo blocks automated access, so this tool never contacts Iryo: it only builds the link, and you open it and see the trains and fares there. "Madrid" means all Madrid stations. Iryo's València trains use Chamartín, not Atocha; if you pick a pair Iryo is known not to run, you get a warning (the page would say "No hay datos de billetes").
 
-Ouigo `search` and `calendar` results now include an `iryo` field with this link for the same day (the cheapest day for `calendar`); it is `null` if Iryo does not serve the pair.
+Ouigo `search` and `calendar` results include both companies' links for the same day (the cheapest day for `calendar`): `shop` for Ouigo and `iryo` for Iryo (`null` if Iryo does not serve the pair).
 
 ## How it works, and what it never does
 

@@ -224,6 +224,7 @@ def calendar(origin: str, destination: str, start: str, end: str, debug: bool = 
             "currency": "EUR", "days": days,
             "cheapest": {"date": cheapest["date"], "price": cheapest["price"]} if cheapest else None,
             "notice": None if priced else "No Ouigo prices in this range.", "fetched_at": _now(),
+            "shop": shop_link(o, d, cheapest["date"]) if cheapest else None,
             "iryo": iryo.companion(origin, destination, cheapest["date"]) if cheapest else None}
 
 
