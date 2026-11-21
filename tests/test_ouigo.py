@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from ouigo_es import cli, core, stations
-from ouigo_es.errors import OuigoError
+from ouigo_iryo import cli, core, stations
+from ouigo_iryo.errors import OuigoError
 
 FX = Path(__file__).parent / "fixtures"
 
@@ -146,7 +146,7 @@ def test_cli_stations_query(capsys):
 
 def test_mcp_tools_registered():
     import asyncio
-    from ouigo_es.mcp_server import mcp
+    from ouigo_iryo.mcp_server import mcp
     names = {t.name for t in asyncio.run(mcp.list_tools())}
     assert names == {"search_trains", "cheapest_days", "find_station", "shop_link", "iryo_link"}
 
@@ -175,5 +175,5 @@ def test_calendar_iryo_uses_cheapest_day(monkeypatch):
 
 
 def test_mcp_has_instructions():
-    from ouigo_es.mcp_server import mcp
+    from ouigo_iryo.mcp_server import mcp
     assert "iryo" in mcp.instructions.lower()

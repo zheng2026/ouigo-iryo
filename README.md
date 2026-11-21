@@ -1,4 +1,4 @@
-# ouigo-es
+# ouigo-iryo
 
 **Ouigo España fares in your terminal and in your AI agent.** Trains, all three fare levels and the cheapest day of the month, as JSON. Plus a ready-made Iryo booking link. Unofficial, not affiliated with Ouigo or Iryo.
 
@@ -29,7 +29,7 @@ Renfe already has a great open CLI ([luisgonzaleznf/renfe-cli](https://github.co
 You need Python 3.12+, [uv](https://docs.astral.sh/uv/) and **Google Chrome** installed. The tool drives your own Chrome, so there's no separate browser download.
 
 ```sh
-uv tool install git+https://github.com/zheng2026/ouigo-es
+uv tool install git+https://github.com/zheng2026/ouigo-iryo
 ouigo --help
 ```
 
@@ -65,6 +65,10 @@ Both tools print the same layout, so merging them is one `jq` line (with [renfe-
 
 ## Use it from an AI agent (MCP)
 
+<p align="center">
+  <img src="docs/demo-claude.gif" alt="A real Claude Desktop chat, sped up (badges show the speed): asked for the cheapest Valencia–Madrid day trip in December 2026, it finds Wednesday 16 December at €32 return with Ouigo, gives Ouigo's booking links for both directions and Iryo's link for the same day, which are then opened" width="860">
+</p>
+
 Ask in plain words; the assistant picks the tools. This is a real run, lightly shortened ([full transcript](docs/mcp_transcript.md)):
 
 <p align="center">
@@ -74,10 +78,12 @@ Ask in plain words; the assistant picks the tools. This is a real run, lightly s
 ```json
 {
   "mcpServers": {
-    "ouigo": { "command": "uv", "args": ["--directory", "/path/to/ouigo-es", "run", "ouigo-mcp"] }
+    "ouigo": { "command": "/Users/YOU/.local/bin/ouigo-mcp" }
   }
 }
 ```
+
+After `uv tool install`, the `ouigo-mcp` command lives in `~/.local/bin`. Desktop apps don't read your shell's PATH, so give the full path (`which ouigo-mcp` prints it).
 
 Tools: `search_trains(origin, destination, date)`, `cheapest_days(origin, destination, start, end)`, `find_station(query)`, `shop_link(origin, destination, date)`, `iryo_link(origin, destination, date)` (link only, no fares).
 
@@ -131,7 +137,7 @@ Errors go to stderr as `{"error": {"code": …}}`, with renfe-cli's exit codes:
 
 ## En español
 
-`ouigo-es` consulta los precios de Ouigo España desde la terminal o desde un agente de IA (MCP): trenes, las tres tarifas y el día más barato del mes, en JSON. Usa tu propio Chrome para abrir la página pública de búsqueda de Ouigo y leer lo que esa página recibe, sin iniciar sesión, sin credenciales y sin saltarse ninguna protección. Habla el mismo JSON que [renfe-cli](https://github.com/luisgonzaleznf/renfe-cli), así que puedes comparar Renfe, Avlo y Ouigo en una sola lista. No oficial; no afiliado a Ouigo ni a Iryo. Para Iryo solo construye el enlace a su página de reservas (`iryo open Madrid Valencia -d 2026-12-15`), sin precios: Iryo bloquea el acceso automático.
+`ouigo-iryo` consulta los precios de Ouigo España desde la terminal o desde un agente de IA (MCP): trenes, las tres tarifas y el día más barato del mes, en JSON. Usa tu propio Chrome para abrir la página pública de búsqueda de Ouigo y leer lo que esa página recibe, sin iniciar sesión, sin credenciales y sin saltarse ninguna protección. Habla el mismo JSON que [renfe-cli](https://github.com/luisgonzaleznf/renfe-cli), así que puedes comparar Renfe, Avlo y Ouigo en una sola lista. No oficial; no afiliado a Ouigo ni a Iryo. Para Iryo solo construye el enlace a su página de reservas (`iryo open Madrid Valencia -d 2026-12-15`), sin precios: Iryo bloquea el acceso automático.
 
 ## Development
 

@@ -3,8 +3,8 @@ from unittest import mock
 
 import pytest
 
-from ouigo_es import iryo, iryo_cli, mcp_server
-from ouigo_es.errors import OuigoError
+from ouigo_iryo import iryo, iryo_cli, mcp_server
+from ouigo_iryo.errors import OuigoError
 
 GOLDEN = (
     "https://iryo.eu/es/booking/travels?passengers=%5B%7B%22type%22:%22AD%22,%22discountCards%22:%5B%5D,%22id%22:%22passenger_1%22%7D%5D"

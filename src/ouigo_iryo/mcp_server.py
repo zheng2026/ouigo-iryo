@@ -12,7 +12,7 @@ INSTRUCTIONS = (
     "`cheapest_days` once per direction for the whole range, and `search_trains` only for the days the user "
     "picks or asks about; don't search day by day, and don't call `iryo_link` or `shop_link` when the result "
     "already has `iryo` and `shop`.")
-mcp = FastMCP("ouigo-es", instructions=INSTRUCTIONS)
+mcp = FastMCP("ouigo-iryo", instructions=INSTRUCTIONS)
 
 
 def _safe(fn, *a):

@@ -11,3 +11,15 @@ wheels/
 
 # private ceremony files (handoff, bootline, morning recall)
 for-human/
+
+# private working notes (kept locally, never published)
+log.md
+GITHUB_DRAFTS.md
+RECON_*.md
+SPEC_*.md
+PLAN_*.md
+VIDEO_PLAN_*.md
+IRYO_DEEPLINK_*.md
+consult_*/
+# video for X lives outside the repo
+docs/demo-claude.mp4

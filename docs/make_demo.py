@@ -97,7 +97,7 @@ text{{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",m
 <rect width="{W}" height="{H}" rx="10" fill="{C["bg"]}"/>
 <rect width="{W}" height="32" rx="10" fill="{C["bar"]}"/><rect y="22" width="{W}" height="10" fill="{C["bar"]}"/>
 <circle cx="20" cy="16" r="6" fill="#ff5f57"/><circle cx="40" cy="16" r="6" fill="#febc2e"/><circle cx="60" cy="16" r="6" fill="#28c840"/>
-<text x="{W / 2}" y="20" text-anchor="middle" fill="{C["dim"]}" font-size="12">ouigo-es · Madrid → Valencia · real output (trimmed), Dec 2026</text>
+<text x="{W / 2}" y="20" text-anchor="middle" fill="{C["dim"]}" font-size="12">ouigo-iryo · Madrid → Valencia · real output (trimmed), Dec 2026</text>
 <defs>{"".join(e for e in els if e.startswith("<clipPath"))}</defs>
 {"".join(e for e in els if not e.startswith("<clipPath"))}
 </svg>'''
