@@ -111,3 +111,16 @@ def iryo_link(origin: str, destination: str, date: str) -> dict:
             "origin": {"code": o["code"], "name": o["name"]},
             "destination": {"code": d["code"], "name": d["name"]},
             "date": date, "warning": _warning(o, d), "notice": NOTICE}
+
+
+COMPANION_NOTE = "Iryo shows its trains and prices only on its own page: open the link to compare."
+
+
+def companion(origin: str, destination: str, date: str) -> dict | None:
+    """Iryo link for the same route and day, attached to Ouigo answers. None if Iryo does not serve a station."""
+    try:
+        r = iryo_link(origin, destination, date)
+    except OuigoError:
+        return None
+    return {"url": r["url"], "origin": r["origin"], "destination": r["destination"],
+            "date": date, "warning": r["warning"], "note": COMPANION_NOTE}

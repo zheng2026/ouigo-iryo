@@ -156,3 +156,23 @@ def test_live_search():
     from datetime import date, timedelta
     r = core.search("Madrid", "Valencia", (date.today() + timedelta(days=14)).isoformat())
     assert r["count"] > 0
+
+
+def test_search_carries_iryo(monkeypatch):
+    from test_iryo import GOLDEN
+    monkeypatch.setattr(core, "_capture", lambda *a, **k: fx("search.json"))
+    r = core.search("Madrid", "Valencia", "2026-12-15")
+    assert r["iryo"]["url"] == GOLDEN and r["iryo"]["warning"] is None and "own page" in r["iryo"]["note"]
+    assert core.search("Madrid", "Murcia", "2026-12-15")["iryo"] is None
+
+
+def test_calendar_iryo_uses_cheapest_day(monkeypatch):
+    monkeypatch.setattr(core, "_capture", lambda *a, **k: fx("calendar_month.json"))
+    r = core.calendar("Madrid", "Valencia", "2026-12-05", "2026-12-20")
+    assert r["iryo"]["date"] == r["cheapest"]["date"]
+    assert f'%22departure%22:%22{r["cheapest"]["date"]}%22' in r["iryo"]["url"]
+
+
+def test_mcp_has_instructions():
+    from ouigo_es.mcp_server import mcp
+    assert "iryo" in mcp.instructions.lower()

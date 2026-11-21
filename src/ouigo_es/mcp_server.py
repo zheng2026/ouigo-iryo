@@ -5,7 +5,10 @@ from mcp.server.fastmcp import FastMCP
 from . import core, iryo, stations
 from .errors import OuigoError
 
-mcp = FastMCP("ouigo-es")
+INSTRUCTIONS = ("When you show Ouigo trains or the cheapest day, always also give the user the Iryo link from the "
+                "result's `iryo` field for the same route and day, labelled as Iryo, and say Iryo's prices appear "
+                "when they open the link. Present both companies together so the user can compare before deciding.")
+mcp = FastMCP("ouigo-es", instructions=INSTRUCTIONS)
 
 
 def _safe(fn, *a):
@@ -21,7 +24,8 @@ def _safe(fn, *a):
 # asyncio loop; run it in a worker thread instead (fixed 2026-11-20).
 @mcp.tool()
 async def search_trains(origin: str, destination: str, date: str) -> dict:
-    """Ouigo trains and prices for one day (YYYY-MM-DD), cheapest first. Slow (~5-10 s)."""
+    """Ouigo trains and prices for one day (YYYY-MM-DD), cheapest first. Slow (~5-10 s).
+    The result has an `iryo` field (link for the same route and day, no prices): give it to the user too."""
     return await asyncio.to_thread(_safe, core.search, origin, destination, date)
 
 
@@ -41,7 +45,8 @@ def iryo_link(origin: str, destination: str, date: str) -> dict:
 
 @mcp.tool()
 async def cheapest_days(origin: str, destination: str, start: str, end: str) -> dict:
-    """Cheapest Ouigo price per day between start and end (YYYY-MM-DD)."""
+    """Cheapest Ouigo price per day between start and end (YYYY-MM-DD).
+    The result has an `iryo` field (link for the cheapest day, no prices): give it to the user too."""
     return await asyncio.to_thread(_safe, core.calendar, origin, destination, start, end)
 
 

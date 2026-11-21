@@ -8,6 +8,7 @@ import time
 from datetime import date as _date, datetime, timedelta, timezone
 from urllib.parse import quote
 
+from . import iryo
 from .errors import OuigoError
 from .stations import parse_stations, resolve, load_stations
 
@@ -199,7 +200,8 @@ def search(origin: str, destination: str, date: str, debug: bool = False) -> dic
             "passengers": {"adults": 1}, "fares_included": True,
             "notice": None if trains else "No Ouigo trains on this date.",
             "count": len(trains), "trains": trains, "shop": shop_link(o, d, date),
-            "delays_included": False, "retries": [], "fetched_at": _now()}
+            "delays_included": False, "retries": [], "fetched_at": _now(),
+            "iryo": iryo.companion(origin, destination, date)}
 
 
 def calendar(origin: str, destination: str, start: str, end: str, debug: bool = False) -> dict:
@@ -221,7 +223,8 @@ def calendar(origin: str, destination: str, start: str, end: str, debug: bool = 
     return {"source": "ouigo", "origin": _st(o), "destination": _st(d), "passengers": {"adults": 1},
             "currency": "EUR", "days": days,
             "cheapest": {"date": cheapest["date"], "price": cheapest["price"]} if cheapest else None,
-            "notice": None if priced else "No Ouigo prices in this range.", "fetched_at": _now()}
+            "notice": None if priced else "No Ouigo prices in this range.", "fetched_at": _now(),
+            "iryo": iryo.companion(origin, destination, cheapest["date"]) if cheapest else None}
 
 
 def refresh_stations(debug: bool = False) -> list[dict]:
